@@ -25,9 +25,12 @@ SECRET_KEY = 'django-insecure-w&m_##ij22h14v^_+*jh*)i)k$=n^*!4@=&2^u(3of34*j04k_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
 
-
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+    "warfsystem-production.up.railway.app",
+]
 # Application definition
 
 INSTALLED_APPS = [
