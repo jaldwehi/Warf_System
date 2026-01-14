@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Create Employee | WARF{% endblock %}
+{% block hero_title %}Create Employee{% endblock %}
+{% block hero_subtitle %}Add a new employee account and set face reference{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 950px;">
+  <div class="card p-4" style="border-radius:18px;">
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Username</label>
+          {{ form.username }}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Email</label>
+          {{ form.email }}
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">First name</label>
+          {{ form.first_name }}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Last name</label>
+          {{ form.last_name }}
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Temporary Password</label>
+          {{ form.password }}
+          <div class="form-text">{{ form.password.help_text }}</div>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Status</label>
+          {{ form.status }}
+        </div>
+
+        <div class="col-12">
+          <label class="form-label">Face Reference Image (optional)</label>
+          {{ form.face_image }}
+          <div class="form-text">This image will be used for face verification in meetings.</div>
+        </div>
+      </div>
+
+      {% if form.errors %}
+        <div class="alert alert-danger mt-3">
+          Please fix the errors and try again.
+        </div>
+      {% endif %}
+
+      <div class="d-flex gap-2 mt-4">
+        <button class="btn btn-dark" type="submit">Create</button>
+        <a class="btn btn-outline-secondary" href="{% url 'accounts:employee_list' %}">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

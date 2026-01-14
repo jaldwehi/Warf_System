@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}WARF | Employee Dashboard{% endblock %}
+
+{% block hero_title %}Employee Dashboard{% endblock %}
+{% block hero_subtitle %}
+Your workspace to join meetings and follow assigned tasks
+{% endblock %}
+
+{% block content %}
+<style>
+  /* Dashboard-only styling */
+  .db-grid{
+    display:grid;
+    gap:20px;
+    grid-template-columns: repeat(12, 1fr);
+  }
+
+  .db-card{
+    grid-column: span 6;
+    background:#fff;
+    border:1px solid var(--warf-border, #e6edf6);
+    border-radius:20px;
+    padding:20px;
+    box-shadow: var(--warf-shadow-soft, 0 10px 24px rgba(2, 8, 23, 0.08));
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+
+  .db-card:hover{
+    transform: translateY(-3px);
+    box-shadow: var(--warf-shadow, 0 14px 34px rgba(2, 8, 23, 0.12));
+  }
+
+  .db-ico{
+    width:52px;
+    height:52px;
+    border-radius:16px;
+    background: rgba(86,214,209,.18);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  .db-ico img{
+    width:28px;
+    height:28px;
+    object-fit:contain;
+  }
+
+  .db-title{
+    font-weight:800;
+    font-size:18px;
+    margin:0;
+  }
+
+  .db-sub{
+    color: var(--warf-muted, #64748b);
+    font-size:13px;
+    margin-top:4px;
+  }
+
+  .db-actions{
+    margin-top:16px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+
+  .db-link{
+    text-decoration:none;
+    font-weight:700;
+  }
+
+  .db-badge{
+    font-size:12px;
+    font-weight:700;
+    padding:6px 12px;
+    border-radius:999px;
+    background:#f1f5f9;
+    color:#0f172a;
+    border:1px solid #e2e8f0;
+    white-space:nowrap;
+  }
+
+  @media (max-width: 576px){
+    .db-card{ grid-column: span 12; }
+  }
+</style>
+
+<div class="db-grid">
+
+  <!-- Meetings -->
+  <div class="db-card">
+    <div class="d-flex align-items-center gap-3">
+      <div class="db-ico">
+        <img src="{% static 'images/dashboard/meeting_icon.png' %}" alt="Meetings">
+      </div>
+      <div>
+        <p class="db-title">Meetings</p>
+        <p class="db-sub">Join meetings and verify attendance</p>
+      </div>
+    </div>
+    <div class="db-actions">
+      <a class="db-link" href="{% url 'meetings:list' %}">Open →</a>
+      <span class="db-badge">Attendance</span>
+    </div>
+  </div>
+
+  <!-- My Tasks -->
+  <div class="db-card">
+    <div class="d-flex align-items-center gap-3">
+      <div class="db-ico">
+        <img src="{% static 'images/dashboard/Task_icon.png' %}" alt="My Tasks">
+      </div>
+      <div>
+        <p class="db-title">My Tasks</p>
+        <p class="db-sub">View assigned tasks and follow progress</p>
+      </div>
+    </div>
+    <div class="db-actions">
+      <a class="db-link" href="{% url 'tasks:list' %}">Open →</a>
+      <span class="db-badge">Assigned</span>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+

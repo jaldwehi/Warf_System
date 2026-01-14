@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block title %}Tasks | WARF{% endblock %}
+{% block hero_title %}Tasks{% endblock %}
+{% block hero_subtitle %}Assigned tasks and progress tracking{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 1050px;">
+
+  <div class="card p-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div>
+        <h5 class="mb-1">All Tasks</h5>
+        <div class="text-muted small">
+          {% if is_admin %}Assign tasks and set deadlines.{% else %}Your assigned tasks only.{% endif %}
+        </div>
+      </div>
+      <a class="btn btn-outline-primary btn-sm" href="{% url 'minutes:list' %}">Minutes</a>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead>
+          <tr class="text-muted small">
+            <th>Task</th>
+            <th>Meeting</th>
+            <th style="width: 240px;">Assignee</th>
+            <th style="width: 120px;">Priority</th>
+            <th style="width: 160px;">Status</th>
+            <th style="width: 160px;">Due</th>
+
+            {% if is_admin %}
+              <th style="width: 110px;"></th>
+            {% else %}
+              <th style="width: 340px;">Submit Solution</th>
+            {% endif %}
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for t in tasks %}
+          <tr>
+            <td class="fw-semibold">{{ t.title }}</td>
+            <td class="text-muted">{{ t.meeting.title }}</td>
+
+            {% if is_admin %}
+              <td>
+                <form method="post" class="d-flex gap-2 align-items-center">
+                  {% csrf_token %}
+                  <input type="hidden" name="task_id" value="{{ t.id }}">
+
+                  <select name="assigned_to" class="form-select form-select-sm">
+                    <option value="" {% if not t.assigned_to %}selected{% endif %}>Unassigned</option>
+                    {% for u in users %}
+                      <option value="{{ u.id }}" {% if t.assigned_to and t.assigned_to.id == u.id %}selected{% endif %}>
+                        {{ u.username }}
+                      </option>
+                    {% endfor %}
+                  </select>
+              </td>
+
+              <td>
+                {% if t.priority == "high" %}
+                  <span class="badge bg-danger">High</span>
+                {% elif t.priority == "medium" %}
+                  <span class="badge bg-warning text-dark">Medium</span>
+                {% else %}
+                  <span class="badge bg-secondary">Low</span>
+                {% endif %}
+              </td>
+
+              <td>
+                <select name="status" class="form-select form-select-sm">
+                  <option value="todo" {% if t.status == "todo" %}selected{% endif %}>To Do</option>
+                  <option value="in_progress" {% if t.status == "in_progress" %}selected{% endif %}>In Progress</option>
+                  <option value="done" {% if t.status == "done" %}selected{% endif %}>Done</option>
+                </select>
+              </td>
+
+              <td>
+                <input
+                  type="date"
+                  name="due_date"
+                  class="form-control form-control-sm"
+                  value="{% if t.due_date %}{{ t.due_date|date:'Y-m-d' }}{% endif %}"
+                >
+              </td>
+
+              <td class="text-end">
+                <button class="btn btn-primary btn-sm" type="submit">Save</button>
+                </form>
+              </td>
+
+            {% else %}
+              <td class="text-muted">
+                {{ t.assigned_to.username|default:"Unassigned" }}
+              </td>
+
+              <td>
+                {% if t.priority == "high" %}
+                  <span class="badge bg-danger">High</span>
+                {% elif t.priority == "medium" %}
+                  <span class="badge bg-warning text-dark">Medium</span>
+                {% else %}
+                  <span class="badge bg-secondary">Low</span>
+                {% endif %}
+              </td>
+
+              <td>
+                <span class="badge bg-light text-dark border">{{ t.get_status_display }}</span>
+              </td>
+
+              <td class="text-muted">
+                {{ t.due_date|default:"—" }}
+              </td>
+
+              <!-- ✅ Submit Solution UI -->
+              <td>
+                <form method="post" enctype="multipart/form-data" class="d-grid gap-2">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="submit_solution">
+                  <input type="hidden" name="task_id" value="{{ t.id }}">
+
+                  <textarea
+                    name="solution_text"
+                    class="form-control form-control-sm"
+                    rows="3"
+                    placeholder="Write your solution..."
+                  >{{ t.solution_text|default_if_none:"" }}</textarea>
+
+                  <div class="d-flex gap-2 align-items-center">
+                    <input type="file" name="solution_file" class="form-control form-control-sm">
+                    <button class="btn btn-success btn-sm" type="submit">Submit</button>
+                  </div>
+
+                  {% if t.solution_file %}
+                    <div class="text-muted small">
+                      Uploaded: {{ t.solution_file.name }}
+                    </div>
+                  {% endif %}
+
+                  {% if t.submitted_at %}
+                    <div class="text-muted small">
+                      Submitted at: {{ t.submitted_at }}
+                    </div>
+                  {% endif %}
+                </form>
+              </td>
+            {% endif %}
+          </tr>
+
+          {% empty %}
+          <tr>
+            <td colspan="{% if is_admin %}7{% else %}7{% endif %}" class="text-muted text-center py-4">
+              No tasks yet.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

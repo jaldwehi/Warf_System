@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Profile | WARF{% endblock %}
+{% block hero_title %}Profile{% endblock %}
+{% block hero_subtitle %}Your account details and employee information{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 950px;">
+  <div class="card p-4" style="border-radius:18px;">
+    {% if profile %}
+      <div class="row g-4">
+        <div class="col-md-6">
+          <div class="fw-bold mb-2">Account</div>
+          <div class="text-muted small">Username</div>
+          <div class="mb-3">{{ profile.user.username }}</div>
+
+          <div class="text-muted small">Full name</div>
+          <div class="mb-3">{{ profile.user.get_full_name|default:"—" }}</div>
+
+          <div class="text-muted small">Email</div>
+          <div class="mb-0">{{ profile.user.email|default:"—" }}</div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="fw-bold mb-2">Employee Profile</div>
+
+          <div class="text-muted small">Status</div>
+          <div class="mb-3">
+            <span class="badge bg-dark">{{ profile.status }}</span>
+          </div>
+
+          {% if profile.department %}
+            <div class="text-muted small">Department</div>
+            <div class="mb-3">{{ profile.department }}</div>
+          {% endif %}
+
+          {% if profile.phone %}
+            <div class="text-muted small">Phone</div>
+            <div class="mb-0">{{ profile.phone }}</div>
+          {% endif %}
+        </div>
+      </div>
+    {% else %}
+      <div class="alert alert-warning mb-0">
+        No profile found for this user yet.
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

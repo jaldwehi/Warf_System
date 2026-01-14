@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+{% block hero_title %}Employees Management{% endblock %}
+{% block hero_subtitle %}Admin access only{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid" style="max-width: 1150px;">
+
+  <!-- Stats -->
+  <div class="row g-3 mb-3">
+    <div class="col-12 col-md-3">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div class="text-muted small">Total Employees</div>
+          <div class="fs-4 fw-bold">{{ total }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-3">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div class="text-muted small">Active</div>
+          <div class="fs-4 fw-bold">{{ active_count }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-3">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div class="text-muted small">Suspended</div>
+          <div class="fs-4 fw-bold">{{ suspended_count }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-3">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div class="text-muted small">Left</div>
+          <div class="fs-4 fw-bold">{{ left_count }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table Card -->
+  <div class="card shadow-sm">
+    <div class="card-header bg-white d-flex flex-wrap align-items-center justify-content-between gap-2">
+      <div class="fw-semibold">Employees</div>
+
+      <div class="d-flex gap-2 align-items-center flex-wrap">
+        <div style="min-width: 260px;">
+          <input id="teamSearch" type="text" class="form-control form-control-sm"
+                 placeholder="Search by username, name, email...">
+        </div>
+
+        <a class="btn btn-sm btn-dark" href="{% url 'accounts:employee_create' %}">
+          + Add Employee
+        </a>
+      </div>
+    </div>
+
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0" id="teamTable">
+          <thead class="table-light">
+            <tr>
+              <th style="width: 70px;">Photo</th>
+              <th>Name</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th style="width: 140px;">Status</th>
+              <th style="width: 150px;">Face Ref</th>
+              <th style="width: 260px;" class="text-end">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for p in profiles %}
+            <tr>
+              <td>
+                {% if p.face_image %}
+                  <img src="{{ p.face_image.url }}" alt="face"
+                       width="44" height="44"
+                       style="border-radius: 50%; object-fit: cover;">
+                {% else %}
+                  <div style="width:44px;height:44px;border-radius:50%;background:#e9ecef;"></div>
+                {% endif %}
+              </td>
+
+              <td>
+                <div class="fw-semibold">
+                  {{ p.user.get_full_name|default:p.user.username }}
+                </div>
+                <div class="text-muted small">
+                  Joined: {{ p.created_at|date:"Y-m-d" }}
+                </div>
+              </td>
+
+              <td>{{ p.user.username }}</td>
+              <td>{{ p.user.email|default:"—" }}</td>
+
+              <td>
+                {% if p.status == "active" %}
+                  <span class="badge bg-success">Active</span>
+                {% elif p.status == "suspended" %}
+                  <span class="badge bg-warning text-dark">Suspended</span>
+                {% elif p.status == "left" %}
+                  <span class="badge bg-secondary">Left</span>
+                {% endif %}
+              </td>
+
+              <td>
+                {% if p.face_image %}
+                  <span class="badge bg-primary">Available</span>
+                {% else %}
+                  <span class="badge bg-light text-dark" style="border:1px solid #e2e8f0;">Missing</span>
+                {% endif %}
+              </td>
+
+              <td class="text-end">
+                {% if p.user == request.user %}
+                  <span class="text-muted small">Current Admin</span>
+                {% else %}
+
+                  <!-- Edit -->
+                  <a class="btn btn-sm btn-outline-dark"
+                     href="{% url 'accounts:employee_edit' p.pk %}">
+                    Edit
+                  </a>
+
+                  <!-- Toggle status -->
+                  {% if p.status != "left" %}
+                    <a class="btn btn-sm btn-outline-primary"
+                       href="{% url 'accounts:employee_toggle_status' p.pk %}"
+                       onclick="return confirm('Are you sure you want to change this employee status?');">
+                      {% if p.status == "active" %}Suspend{% else %}Activate{% endif %}
+                    </a>
+                  {% else %}
+                    <button class="btn btn-sm btn-outline-secondary" disabled>Locked</button>
+                  {% endif %}
+
+                {% endif %}
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="7" class="text-center text-muted py-5">
+                No employees found.
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  (function() {
+    const input = document.getElementById("teamSearch");
+    const table = document.getElementById("teamTable");
+    if (!input || !table) return;
+
+    input.addEventListener("input", function() {
+      const q = input.value.toLowerCase().trim();
+      const rows = table.querySelectorAll("tbody tr");
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(q) ? "" : "none";
+      });
+    });
+  })();
+</script>
+
+{% endblock %}

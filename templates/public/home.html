@@ -1,0 +1,104 @@
+{% load static %}
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WARF | Home</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/warf.css' %}">
+</head>
+
+<body class="auth-page">
+
+  <!-- HERO -->
+  <section class="home-hero">
+    <div class="home-hero-bg"></div>
+
+    <div class="home-hero-inner">
+
+      <div class="home-brand">
+        <img class="home-logo" src="{% static 'images/Warf_logo.png' %}" alt="WARF Logo">
+      </div>
+
+      <h1 class="home-title">WARF</h1>
+      <p class="home-subtitle">
+        Workforce & AI Retention Framework — capture meetings, decisions, and tasks so knowledge stays even after employees leave.
+      </p>
+
+      <div class="home-actions">
+        {% if request.user.is_authenticated %}
+          <a class="btn btn-lg home-btn-primary" href="{% url 'role_redirect' %}">Go to Dashboard</a>
+        {% else %}
+          <a class="btn btn-lg home-btn-primary" href="{% url 'login' %}">Login</a>
+        {% endif %}
+
+        <a class="btn btn-lg home-btn-ghost" href="{% url 'login' %}">Continue</a>
+      </div>
+
+      <!-- Quick trust line -->
+      <div class="home-trust">
+        Internal • Secure • Role-based access • AI summaries
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <main class="home-wrap">
+    <div class="container">
+
+      <div class="row g-4">
+        <div class="col-lg-4">
+          <div class="home-card">
+            <div class="home-card-ico">
+              <img src="{% static 'images/dashboard/meeting_icon.png' %}" alt="Meetings">
+            </div>
+            <div>
+              <div class="home-card-title">Smart Meetings</div>
+              <div class="home-card-sub">
+                Schedule, join, and verify attendance with a streamlined flow.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="home-card">
+            <div class="home-card-ico">
+              <img src="{% static 'images/dashboard/Miuntes_icon.png' %}" alt="Minutes">
+            </div>
+            <div>
+              <div class="home-card-title">Minutes & Decisions</div>
+              <div class="home-card-sub">
+                Document decisions and outcomes with structured minutes and summaries.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="home-card">
+            <div class="home-card-ico">
+              <img src="{% static 'images/dashboard/Task_icon.png' %}" alt="Tasks">
+            </div>
+            <div>
+              <div class="home-card-title">Tasks Tracking</div>
+              <div class="home-card-sub">
+                Assign responsibilities and track progress across teams.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="home-footer">
+        <small>© {% now "Y" %} WARF. All rights reserved.</small>
+      </div>
+
+    </div>
+  </main>
+
+</body>
+</html>

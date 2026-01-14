@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}WARF | Admin Dashboard{% endblock %}
+
+{% block hero_title %}Admin Dashboard{% endblock %}
+{% block hero_subtitle %}
+Quick control center for meetings, minutes, tasks, and team
+{% endblock %}
+
+{% block content %}
+<style>
+  /* Dashboard-only styling */
+  .db-grid{
+    display:grid;
+    gap:20px;
+    grid-template-columns: repeat(12, 1fr);
+  }
+
+  .db-card{
+    grid-column: span 4;
+    background:#fff;
+    border:1px solid var(--warf-border, #e6edf6);
+    border-radius:20px;
+    padding:20px;
+    box-shadow: var(--warf-shadow-soft, 0 10px 24px rgba(2, 8, 23, 0.08));
+    transition: transform .15s ease, box-shadow .15s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .db-card:hover{
+    transform: translateY(-3px);
+    box-shadow: var(--warf-shadow, 0 14px 34px rgba(2, 8, 23, 0.12));
+  }
+
+  /* Top content link (keeps actions inside the card) */
+  .db-card-body{
+    display:block;
+    text-decoration:none;
+    color: inherit;
+  }
+
+  .db-ico{
+    width:52px;
+    height:52px;
+    border-radius:16px;
+    background: rgba(86,214,209,.18);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex: 0 0 auto;
+  }
+
+  .db-ico img{
+    width:28px;
+    height:28px;
+    object-fit:contain;
+  }
+
+  .db-title{
+    font-weight:800;
+    font-size:18px;
+    margin:0;
+  }
+
+  .db-sub{
+    color: var(--warf-muted, #64748b);
+    font-size:13px;
+    margin-top:4px;
+  }
+
+  .db-actions{
+    margin-top: auto;
+    padding-top: 16px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+
+  .db-link{
+    text-decoration:none;
+    font-weight:700;
+  }
+
+  .db-badge{
+    font-size:12px;
+    font-weight:700;
+    padding:6px 12px;
+    border-radius:999px;
+    background:#f1f5f9;
+    color:#0f172a;
+    border:1px solid #e2e8f0;
+    white-space:nowrap;
+  }
+
+  @media (max-width: 992px){
+    .db-card{ grid-column: span 6; }
+  }
+
+  @media (max-width: 576px){
+    .db-card{ grid-column: span 12; }
+  }
+</style>
+
+<div class="db-grid">
+
+  <!-- Meetings -->
+  <div class="db-card">
+    <a class="db-card-body" href="{% url 'meetings:list' %}">
+      <div class="d-flex align-items-center gap-3">
+        <div class="db-ico">
+          <img src="{% static 'images/dashboard/meeting_icon.png' %}" alt="Meetings">
+        </div>
+        <div>
+          <p class="db-title">Meetings</p>
+          <p class="db-sub">Create, manage, and monitor meeting schedules</p>
+        </div>
+      </div>
+    </a>
+    <div class="db-actions">
+      <a class="db-link" href="{% url 'meetings:list' %}">Open →</a>
+      <span class="db-badge">Admin Access</span>
+    </div>
+  </div>
+
+  <!-- Minutes -->
+  <div class="db-card">
+    <a class="db-card-body" href="{% url 'minutes:home' %}">
+      <div class="d-flex align-items-center gap-3">
+        <div class="db-ico">
+          <img src="{% static 'images/dashboard/Miuntes_icon.png' %}" alt="Minutes">
+        </div>
+        <div>
+          <p class="db-title">Minutes</p>
+          <p class="db-sub">Review decisions, summaries, and meeting outcomes</p>
+        </div>
+      </div>
+    </a>
+    <div class="db-actions">
+      <a class="db-link" href="{% url 'minutes:home' %}">Open →</a>
+      <span class="db-badge">Documents</span>
+    </div>
+  </div>
+
+  <!-- Tasks -->
+  <div class="db-card">
+    <a class="db-card-body" href="{% url 'tasks:list' %}">
+      <div class="d-flex align-items-center gap-3">
+        <div class="db-ico">
+          <img src="{% static 'images/dashboard/Task_icon.png' %}" alt="Tasks">
+        </div>
+        <div>
+          <p class="db-title">Tasks</p>
+          <p class="db-sub">Assign tasks, track progress, and follow completion</p>
+        </div>
+      </div>
+    </a>
+    <div class="db-actions">
+      <a class="db-link" href="{% url 'tasks:list' %}">Open →</a>
+      <span class="db-badge">Tracking</span>
+    </div>
+  </div>
+
+  <!-- Archive -->
+  <div class="db-card">
+    <a class="db-card-body" href="{% url 'archive:home' %}">
+      <div class="d-flex align-items-center gap-3">
+        <div class="db-ico">
+          <img src="{% static 'images/dashboard/Archive.png' %}" alt="Archive">
+        </div>
+        <div>
+          <p class="db-title">Archive</p>
+          <p class="db-sub">Central knowledge archive for all employee work, solutions, and documents</p>
+        </div>
+      </div>
+    </a>
+    <div class="db-actions">
+      <a class="db-link" href="{% url 'archive:home' %}">Open →</a>
+      <span class="db-badge">Admin Only</span>
+    </div>
+  </div>
+
+  {% if user.is_authenticated and user.is_superuser %}
+  <!-- Team -->
+  <div class="db-card">
+    <a class="db-card-body" href="{% url 'accounts:employee_list' %}">
+      <div class="d-flex align-items-center gap-3">
+        <div class="db-ico">
+          <img src="{% static 'images/dashboard/team_icon.png' %}" alt="Team">
+        </div>
+        <div>
+          <p class="db-title">Team</p>
+          <p class="db-sub">Manage employees, roles, and access permissions</p>
+        </div>
+      </div>
+    </a>
+    <div class="db-actions">
+      <a class="db-link" href="{% url 'accounts:employee_list' %}">Open →</a>
+      <span class="db-badge">Superuser</span>
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

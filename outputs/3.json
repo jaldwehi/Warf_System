@@ -1,0 +1,38 @@
+{
+  "meeting_id": "3",
+  "summary": "- The team conducted a review of the Q1 roadmap, focusing on the progress of key milestones.\n- The UI design phase is close to completion, with ongoing adjustments needed for improved usability and consistency.\n- Backend integration tasks were assessed, revealing pending API implementations and a discussion on redistributing tasks to enhance development speed.\n- Potential risks were identified, particularly regarding delays in UI finalization due to feedback timelines.\n- The importance of clear ownership for tasks was emphasized to prevent bottlenecks in the workflow.",
+  "decisions": {
+    "decisions": [
+      "Finalize the UI design by next week."
+    ],
+    "action_items": [
+      {
+        "title": "Assign backend integration tasks",
+        "assignee": "Ali",
+        "due_date": null,
+        "priority": "high"
+      },
+      {
+        "title": "Review progress",
+        "assignee": null,
+        "due_date": "next weekly meeting",
+        "priority": "medium"
+      },
+      {
+        "title": "Monitor potential delays",
+        "assignee": null,
+        "due_date": null,
+        "priority": "medium"
+      }
+    ],
+    "risks": [
+      "Possible delays in UI finalization if feedback is not addressed quickly."
+    ],
+    "notes": [
+      "UI design phase is nearing completion but requires final adjustments.",
+      "Some APIs are still pending implementation.",
+      "Importance of clear ownership for each task to avoid bottlenecks."
+    ]
+  },
+  "created_at": "2026-01-11T11:17:17.787967"
+}

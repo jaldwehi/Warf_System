@@ -1,0 +1,129 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>{% block title %}WARF{% endblock %}</title>
+
+  <!-- Inter font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- WARF CSS -->
+  <link rel="stylesheet" href="{% static 'css/warf.css' %}">
+  <style>
+  /* Force navbar to fit the logo (quick guaranteed fix) */
+  .warf-navbar{ position: relative; z-index: 10; }
+  .warf-hero{ position: relative; z-index: 1; }
+  .warf-navbar-inner{ min-height: 92px; align-items: center; }
+  .warf-topbar{
+  position: relative;
+  z-index: 9999;
+  }
+
+ .warf-topbar a{
+  position: relative;
+  z-index: 10000;
+  pointer-events: auto;
+ }
+
+  .warf-brand{ display:flex; align-items:center; }
+  .warf-logo{ height: 250px !important; width:auto; object-fit:contain; display:block; }
+</style>
+
+
+</head>
+
+<body class="warf-body">
+
+  <!-- Thin topbar -->
+  <div class="warf-topbar">
+    <div class="warf-topbar-inner">
+      <div class="warf-topbar-left">
+        <span class="warf-topbar-ico">👤</span>
+        <span class="warf-topbar-welcome">Welcome</span>
+        <span class="warf-topbar-name">
+          {{ request.user.get_full_name|default:request.user.username }}
+        </span>
+      </div>
+
+      <div class="warf-topbar-right">
+        <a class="warf-topbar-link" href="{% url 'accounts:profile' %}">Profile</a>
+        <span class="warf-topbar-sep">|</span>
+        <a class="warf-topbar-link" href="{% url 'logout' %}">Log Out</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main navbar -->
+  <header class="warf-navbar">
+    <div class="warf-navbar-inner">
+
+      <!-- LEFT: Logo (replaces WARF text) -->
+      <a class="warf-brand" href="{% url 'role_redirect' %}">
+         <img
+           src="{% static 'images/warf_logo.png' %}"
+           alt="WARF"
+           class="warf-logo"
+         />
+      </a>
+
+
+      <!-- CENTER: Apps links -->
+      <nav class="warf-nav-links">
+        <a class="warf-nav-link" href="{% url 'role_redirect' %}">Dashboard</a>
+        <a class="warf-nav-link" href="{% url 'meetings:list' %}">Meetings</a>
+        <a class="warf-nav-link" href="{% url 'minutes:list' %}">Minutes</a>
+
+        {% if user.is_authenticated and user.is_staff %}
+          <a class="warf-nav-link" href="{% url 'archive:home' %}">Archive</a>
+        {% endif %}
+
+        {% if user.is_authenticated and user.is_superuser %}
+          <a class="warf-nav-link" href="{% url 'accounts:employee_list' %}">Team</a>
+        {% endif %}
+      </nav>
+
+      <!-- RIGHT: WARF Assistant -->
+      <div class="warf-nav-right">
+        <a class="warf-assistant-btn" href="{% url 'assistant:chat' %}">
+           WARF Assistant
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="warf-hero">
+    <div class="warf-hero-inner">
+
+      <h1 class="warf-hero-title">
+        {% block hero_title %}{% endblock %}
+      </h1>
+
+      <p class="warf-hero-sub">
+        {% block hero_subtitle %}{% endblock %}
+      </p>
+
+      <!-- NEW: Hero actions (buttons / small tools) -->
+      <div class="mt-3">
+        {% block hero_actions %}{% endblock %}
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Content -->
+  <main class="warf-content">
+    {% block content %}{% endblock %}
+  </main>
+
+</body>
+</html>

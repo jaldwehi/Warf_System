@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Team | WARF{% endblock %}
+{% block hero_title %}Team{% endblock %}
+{% block hero_subtitle %}Users and reference profiles{% endblock %}
+
+{% block content %}
+<div class="warf-panel">
+
+  <div class="list-group">
+    {% for u in users %}
+      <div class="list-group-item d-flex align-items-center justify-content-between" style="gap:16px;">
+        <div class="d-flex align-items-center" style="gap:12px;">
+          <div style="width:44px;height:44px;border-radius:12px;background:#eef6ff;display:grid;place-items:center;font-weight:800;">
+            {{ u.username|slice:":1"|upper }}
+          </div>
+
+          <div>
+            <div style="font-weight:800;">
+              {{ u.get_full_name|default:u.username }}
+            </div>
+            <div style="color: var(--warf-muted); font-size: 13px;">
+              {{ u.email|default:"—" }}
+            </div>
+          </div>
+        </div>
+
+        <div style="color: var(--warf-muted); font-size: 13px;">
+          {% if u.is_superuser %}
+            Admin
+          {% elif u.is_staff %}
+            Organizer
+          {% else %}
+            Employee
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}

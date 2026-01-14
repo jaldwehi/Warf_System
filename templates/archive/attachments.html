@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Attachments | WARF{% endblock %}
+{% block hero_title %}Attachments{% endblock %}
+{% block hero_subtitle %}Files, PDFs, and uploaded deliverables{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width:1050px;">
+  <div class="card p-4">
+
+    <h5 class="mb-3">Task Solution Files</h5>
+    <ul class="list-group mb-4">
+      {% for t in task_files %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <div class="fw-semibold">{{ t.title }}</div>
+            <div class="text-muted small">{{ t.meeting.title }}</div>
+          </div>
+          <a href="{{ t.solution_file.url }}" target="_blank">Download</a>
+        </li>
+      {% empty %}
+        <li class="list-group-item text-muted">No task files yet.</li>
+      {% endfor %}
+    </ul>
+
+    <h5 class="mb-3">Submission Files</h5>
+    <ul class="list-group">
+      {% for s in submission_files %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <div class="fw-semibold">{{ s.task.title }}</div>
+            <div class="text-muted small">{{ s.task.meeting.title }} — {{ s.submitted_by }}</div>
+          </div>
+          <a href="{{ s.file.url }}" target="_blank">Download</a>
+        </li>
+      {% empty %}
+        <li class="list-group-item text-muted">No submission files yet.</li>
+      {% endfor %}
+    </ul>
+
+  </div>
+</div>
+{% endblock %}

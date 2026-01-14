@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | WARF{% endblock %}
+
+{% block hero_title %}WARF Control Center{% endblock %}
+{% block hero_subtitle %}Internal platform overview{% endblock %}
+
+{% block content %}
+  <div class="warf-panel">
+
+
+    <div class="row g-3">
+      <div class="col-md-3">
+        <div class="warf-metric">
+          <div class="warf-metric-title">Today Meetings</div>
+          <div class="warf-metric-value">2</div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="warf-metric">
+          <div class="warf-metric-title">Pending Tasks</div>
+          <div class="warf-metric-value">6</div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="warf-metric">
+          <div class="warf-metric-title">Verified Attendees</div>
+          <div class="warf-metric-value">4</div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="warf-metric">
+          <div class="warf-metric-title">Minutes Ready</div>
+          <div class="warf-metric-value">1</div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,5 @@
+deepface
+mtcnn
+opencv-python
+scipy
+numpy

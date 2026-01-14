@@ -1,0 +1,35 @@
+{
+  "meeting_id": "6",
+  "summary": "- The meeting focused on reviewing the progress of the Q1 roadmap and identifying any blockers.\n- Key updates included the near completion of the UI design phase, with some screens pending final review and approval.\n- The team discussed the status of backend integration, noting that several APIs are still pending implementation, which could impact the overall timeline.\n- There was a consensus on the importance of finalizing UI feedback by the end of the next week to avoid delays.\n- The discussion highlighted issues related to unclear ownership, which has led to bottlenecks in previous sprints.\n- The team acknowledged the need for focused efforts on backend integration to facilitate timely completion of the project.\n- The next meeting will serve as a checkpoint to validate the progress of both UI and backend integration efforts.",
+  "decisions": {
+    "decisions": [
+      "Finalize UI design by next week.",
+      "Assign backend integration focus to Ali.",
+      "Review overall progress in the next weekly meeting.",
+      "Track risks related to UI feedback delays and backend dependencies."
+    ],
+    "action_items": [
+      {
+        "title": "Finalize UI feedback",
+        "assignee": null,
+        "due_date": "next week",
+        "priority": "high"
+      },
+      {
+        "title": "Complete backend API implementation",
+        "assignee": "Ali",
+        "due_date": null,
+        "priority": "high"
+      }
+    ],
+    "risks": [
+      "Delays if UI review cycle is slow.",
+      "Risk of backend API readiness impacting integration timeline."
+    ],
+    "notes": [
+      "Emphasized clear task ownership and quick follow-up.",
+      "Next meeting will validate completion of UI and backend integration progress."
+    ]
+  },
+  "created_at": "2026-01-13T10:23:25.329875"
+}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block hero_title %}Minutes{% endblock %}
+{% block hero_subtitle %}
+Centralized records of meeting discussions, summaries, and decisions
+{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width:980px;">
+  <div class="card p-4">
+
+    <p class="text-muted mb-3">
+      In WARF, minutes are created and stored per meeting to ensure
+      knowledge continuity and accountability.
+    </p>
+
+    <ul class="text-muted small mb-4">
+      <li>Each meeting has a single official minutes record</li>
+      <li>Minutes can be drafted, reviewed, and approved</li>
+      <li>AI-generated summaries and decisions are supported</li>
+    </ul>
+
+    <div class="d-flex gap-2">
+      <a class="btn btn-primary" href="{% url 'meetings:list' %}">
+        Go to Meetings
+      </a>
+      <a class="btn btn-outline-primary" href="{% url 'minutes:list' %}">
+        View All Minutes
+      </a>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+
+{% block hero_title %}Minutes{% endblock %}
+{% block hero_subtitle %}Manual Minutes → AI Summary → Decisions{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 980px;">
+
+  <!-- Header Card -->
+  <div class="card p-4 mb-3">
+    <div class="d-flex justify-content-between align-items-start gap-3">
+      <div>
+        <h4 class="mb-1">{{ meeting.title }}</h4>
+        <div class="text-muted">
+          Scheduled: {{ meeting.scheduled_at }}
+        </div>
+
+        <div class="mt-2 d-flex flex-wrap gap-2 align-items-center">
+          {% if minutes.status == "approved" %}
+            <span class="badge bg-success">Approved</span>
+          {% elif minutes.status == "review" %}
+            <span class="badge bg-warning text-dark">Under Review</span>
+          {% else %}
+            <span class="badge bg-secondary">Draft</span>
+          {% endif %}
+
+          {% if minutes.is_locked %}
+            <span class="badge bg-dark">Locked</span>
+          {% endif %}
+
+          {% if minutes.ai_generated_at %}
+            <span class="text-muted small">AI generated: {{ minutes.ai_generated_at }}</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="text-end">
+        <a class="btn btn-outline-primary show-on-hover" href="{% url 'minutes:list' %}">
+          All Minutes
+        </a>
+      </div>
+    </div>
+
+    {% if minutes.status == "approved" and minutes.approved_at %}
+      <div class="mt-3 text-muted small">
+        Approved{% if minutes.approved_by %} by {{ minutes.approved_by }}{% endif %}
+        • {{ minutes.approved_at }}
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Editor -->
+  <div class="card p-4">
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <label class="form-label fw-semibold mb-0">Manual Minutes (Discussion Points)</label>
+
+        {% if minutes.is_locked %}
+          <span class="text-muted small">This minutes record is locked after approval.</span>
+        {% endif %}
+      </div>
+
+      <textarea
+        name="discussion_points"
+        class="form-control"
+        rows="9"
+        placeholder="Write minutes here..."
+        {% if minutes.is_locked %}disabled{% endif %}
+      >{{ minutes.discussion_points }}</textarea>
+
+      <div class="d-flex flex-wrap gap-2 mt-3">
+
+        <!-- Save -->
+        <button
+          type="submit"
+          name="action" value="save"
+          class="btn btn-outline-primary"
+          {% if minutes.is_locked %}disabled{% endif %}
+        >
+          Save
+        </button>
+
+        <!-- AI -->
+        <button
+          type="submit"
+          name="action" value="generate_ai"
+          class="btn btn-primary"
+          {% if minutes.is_locked %}disabled{% endif %}
+        >
+          Generate AI Summary
+        </button>
+
+        <div class="ms-auto d-flex flex-wrap gap-2">
+          <!-- Review -->
+          <button
+            type="submit"
+            name="action" value="send_to_review"
+            class="btn btn-outline-dark"
+            {% if minutes.status == "approved" %}disabled{% endif %}
+          >
+            Send to Review
+          </button>
+
+          <!-- Approve -->
+          <button
+            type="submit"
+            name="action" value="approve"
+            class="btn btn-success"
+            {% if minutes.status == "approved" %}disabled{% endif %}
+          >
+            Approve
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Next module (Tasks) -->
+      <div class="mt-3 p-3 border rounded-3" style="background:#f8fafc;">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+          <div>
+            <div class="fw-semibold">Next Step: Tasks Assignment</div>
+            <div class="text-muted small">
+              After approval, generate tasks from action items and assign them to employees.
+            </div>
+
+            {% if minutes.status != "approved" %}
+              <div class="text-muted small mt-1">Requirement: Minutes must be approved first.</div>
+            {% elif not minutes.ai_decisions %}
+              <div class="text-muted small mt-1">Requirement: Generate AI decisions first.</div>
+            {% endif %}
+          </div>
+
+          <button
+            type="submit"
+            name="action" value="generate_tasks"
+            class="btn btn-outline-primary"
+            {% if minutes.status != "approved" or not minutes.ai_decisions %}disabled{% endif %}
+          >
+            Generate Tasks
+          </button>
+        </div>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- AI Outputs -->
+  <div class="row mt-4 g-3">
+    <div class="col-md-6">
+      <div class="card p-4 h-100">
+        <h5 class="mb-3">AI Summary</h5>
+
+        {% with txt=minutes.ai_summary|default_if_none:"" %}
+          {% if txt %}
+            <div style="white-space: pre-wrap;">{{ txt }}</div>
+          {% else %}
+            <div class="text-muted">(No summary yet)</div>
+          {% endif %}
+        {% endwith %}
+
+        {% if not minutes.ai_summary and minutes.summary %}
+          <hr class="my-3">
+          <div class="text-muted small mb-2">Legacy Summary</div>
+          <div style="white-space: pre-wrap;">{{ minutes.summary }}</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card p-4 h-100">
+        <h5 class="mb-3">AI Decisions / Action Items</h5>
+
+        {% if minutes.ai_decisions %}
+          <div style="white-space: pre-wrap;">{{ minutes.ai_decisions }}</div>
+        {% else %}
+          <div class="text-muted">(No decisions yet)</div>
+        {% endif %}
+
+        {% if minutes.ai_generated_at %}
+          <div class="text-muted mt-3" style="font-size: .9rem;">
+            Generated at: {{ minutes.ai_generated_at }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Archive | WARF{% endblock %}
+{% block hero_title %}Archive{% endblock %}
+{% block hero_subtitle %}Company Memory — preserved knowledge and deliverables{% endblock %}
+
+{% block content %}
+<style>
+  /* Archive-only clean additions (WARF consistent) */
+  .arc-card{
+    border: 1px solid var(--warf-border, #e6edf6);
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: var(--warf-shadow-soft, 0 10px 24px rgba(2, 8, 23, 0.08));
+  }
+
+  .arc-tile{
+    border: 1px solid var(--warf-border, #e6edf6);
+    border-radius: 16px;
+    background: #f8fafc;
+    padding: 16px;
+    height: 100%;
+    transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+    color: inherit;
+  }
+
+  .arc-tile:hover{
+    transform: translateY(-2px);
+    background: #ffffff;
+    box-shadow: var(--warf-shadow-soft, 0 10px 24px rgba(2, 8, 23, 0.08));
+  }
+
+  .arc-ico{
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: rgba(86,214,209,.18);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex: 0 0 auto;
+  }
+
+  .arc-ico img{
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+    display:block;
+  }
+
+  .arc-title{
+    font-weight: 800;
+    margin: 0;
+    font-size: 16px;
+  }
+
+  .arc-sub{
+    color: var(--warf-muted, #64748b);
+    font-size: 13px;
+    margin: 2px 0 0 0;
+  }
+
+  .arc-open{
+    margin-top: 12px;
+    font-weight: 800;
+    color: #0b4db3;
+  }
+</style>
+
+<div class="container" style="max-width: 1050px;">
+
+  <div class="arc-card p-4">
+    <div class="d-flex justify-content-between align-items-start gap-3">
+      <div>
+        <h5 class="mb-1">Company Archive</h5>
+        <div class="text-muted small">
+          A long-term memory vault for work outputs: task solutions, minutes, decisions, and attachments.
+        </div>
+      </div>
+
+      <span class="badge bg-dark">Admin</span>
+    </div>
+
+    <hr class="my-3">
+
+    <div class="row g-3">
+      <!-- Solutions -->
+      <div class="col-md-4">
+        <a href="{% url 'archive:solutions' %}" class="arc-tile">
+          <div class="d-flex gap-3 align-items-start">
+            <div class="arc-ico">
+              <img src="{% static 'images/dashboard/Archive.png' %}" alt="Solutions">
+            </div>
+            <div class="flex-grow-1">
+              <p class="arc-title">Solutions</p>
+              <p class="arc-sub">All submitted task solutions & files.</p>
+              <div class="arc-open">Open →</div>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Minutes & Decisions -->
+      <div class="col-md-4">
+        <a href="{% url 'archive:minutes' %}" class="arc-tile">
+          <div class="d-flex gap-3 align-items-start">
+            <div class="arc-ico">
+              <img src="{% static 'images/dashboard/Miuntes_icon.png' %}" alt="Minutes & Decisions">
+            </div>
+            <div class="flex-grow-1">
+              <p class="arc-title">Minutes & Decisions</p>
+              <p class="arc-sub">Approved minutes, AI summaries, and action items.</p>
+              <div class="arc-open">Open →</div>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Attachments -->
+      <div class="col-md-4">
+        <a href="{% url 'archive:attachments' %}" class="arc-tile">
+          <div class="d-flex gap-3 align-items-start">
+            <div class="arc-ico">
+              <img src="{% static 'images/dashboard/meeting_icon.png' %}" alt="Attachments">
+            </div>
+            <div class="flex-grow-1">
+              <p class="arc-title">Attachments</p>
+              <p class="arc-sub">Recordings, transcripts, PDFs, and documents.</p>
+              <div class="arc-open">Open →</div>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}

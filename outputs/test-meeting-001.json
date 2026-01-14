@@ -1,0 +1,6 @@
+{
+  "meeting_id": "test-meeting-001",
+  "summary": "The team reviewed the Q1 roadmap and made the following decisions:\n\n1. Finalize the UI by next week.\n2. Assign backend tasks to Ali.",
+  "decisions": "**Decisions:**\n- Finalize UI by next week.\n- Assign backend tasks to Ali.\n\n**Action Items:**\n- Complete UI finalization by next week.\n- Assign specific backend tasks to Ali.\n\n**Risks:**\n- Potential delays in UI finalization could impact the overall Q1 roadmap.\n\n**Notes:**\n- The team is focusing on the Q1 roadmap during this meeting.",
+  "created_at": "2026-01-10T16:26:48.552235"
+}

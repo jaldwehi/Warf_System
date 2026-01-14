@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+
+{% block title %}New Meeting | WARF{% endblock %}
+{% block hero_title %}New Meeting{% endblock %}
+{% block hero_subtitle %}Admin only • Create and invite attendees{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid" style="max-width: 1150px;">
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+
+      <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+        <div>
+          <div class="fw-bold" style="font-size: 18px;">Create Meeting</div>
+          <div class="text-muted small">Configure mode, timing, access policy, and attendees.</div>
+        </div>
+
+        <a href="{% url 'meetings:list' %}" class="btn btn-sm btn-outline-secondary">
+          Back to Meetings
+        </a>
+      </div>
+
+      <hr class="my-3">
+
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+          {{ form.non_field_errors }}
+        </div>
+      {% endif %}
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+
+        <div class="row g-3">
+
+          <!-- Left: Core -->
+          <div class="col-12 col-lg-8">
+
+            <div class="card border-0 bg-light">
+              <div class="card-body">
+
+                <div class="fw-semibold mb-2">Core information</div>
+
+                <div class="row g-3">
+                  <div class="col-12">
+                    <label class="form-label">Title</label>
+                    {{ form.title }}
+                    {% if form.title.errors %}
+                      <div class="text-danger small mt-1">{{ form.title.errors|striptags }}</div>
+                    {% endif %}
+                  </div>
+
+                  <div class="col-12 col-md-6">
+                    <label class="form-label">Mode</label>
+                    {{ form.mode }}
+                    {% if form.mode.errors %}
+                      <div class="text-danger small mt-1">{{ form.mode.errors|striptags }}</div>
+                    {% endif %}
+                    <div class="text-muted small mt-1">
+                      Online / Upload / Both
+                    </div>
+                  </div>
+
+                  <div class="col-12 col-md-6">
+                    <label class="form-label">Location (optional)</label>
+                    {{ form.location }}
+                    {% if form.location.errors %}
+                      <div class="text-danger small mt-1">{{ form.location.errors|striptags }}</div>
+                    {% endif %}
+                  </div>
+
+                  <div class="col-12 col-md-6">
+                    <label class="form-label">Starts at</label>
+                    {{ form.starts_at }}
+                    {% if form.starts_at.errors %}
+                      <div class="text-danger small mt-1">{{ form.starts_at.errors|striptags }}</div>
+                    {% endif %}
+                  </div>
+
+                  <div class="col-12 col-md-6">
+                    <label class="form-label">Ends at (optional)</label>
+                    {{ form.ends_at }}
+                    {% if form.ends_at.errors %}
+                      <div class="text-danger small mt-1">{{ form.ends_at.errors|striptags }}</div>
+                    {% endif %}
+                  </div>
+
+                  <div class="col-12">
+                    <label class="form-label">Agenda (optional)</label>
+                    {{ form.agenda }}
+                    {% if form.agenda.errors %}
+                      <div class="text-danger small mt-1">{{ form.agenda.errors|striptags }}</div>
+                    {% endif %}
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="card border-0 bg-light mt-3">
+              <div class="card-body">
+
+                <div class="fw-semibold mb-2">Online access policy</div>
+
+                <div class="row g-3">
+                  <div class="col-12">
+                    <label class="form-label">Jitsi domain</label>
+                    {{ form.jitsi_domain }}
+                    {% if form.jitsi_domain.errors %}
+                      <div class="text-danger small mt-1">{{ form.jitsi_domain.errors|striptags }}</div>
+                    {% endif %}
+                    <div class="text-muted small mt-1">
+                      Example: meet.jit.si (or your self-hosted domain). If the meeting is Upload-only, it will be ignored.
+                    </div>
+                  </div>
+
+                  <div class="col-12 col-md-6">
+                    <label class="form-label">Join early (minutes)</label>
+                    {{ form.join_early_minutes }}
+                    {% if form.join_early_minutes.errors %}
+                      <div class="text-danger small mt-1">{{ form.join_early_minutes.errors|striptags }}</div>
+                    {% endif %}
+                  </div>
+
+                  <div class="col-12 col-md-6">
+                    <label class="form-label">Join late (minutes)</label>
+                    {{ form.join_late_minutes }}
+                    {% if form.join_late_minutes.errors %}
+                      <div class="text-danger small mt-1">{{ form.join_late_minutes.errors|striptags }}</div>
+                    {% endif %}
+                  </div>
+
+                  <div class="col-12">
+                    <div class="form-check">
+                      {{ form.require_face_verification }}
+                      <label class="form-check-label">
+                        Require face verification before joining
+                      </label>
+                    </div>
+                    {% if form.require_face_verification.errors %}
+                      <div class="text-danger small mt-1">{{ form.require_face_verification.errors|striptags }}</div>
+                    {% endif %}
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Right: Attendees -->
+          <div class="col-12 col-lg-4">
+            <div class="card border-0 bg-light h-100">
+              <div class="card-body">
+                <div class="fw-semibold mb-2">Attendees</div>
+                <div class="text-muted small mb-2">
+                  Select users who are allowed to join. Organizer will be added automatically as Host.
+                </div>
+
+                <label class="form-label">Select attendees</label>
+                {{ form.attendees }}
+                {% if form.attendees.errors %}
+                  <div class="text-danger small mt-1">{{ form.attendees.errors|striptags }}</div>
+                {% endif %}
+                <div class="text-muted small mt-2">
+                  Tip: Hold Ctrl (Windows) / Cmd (Mac) to select multiple.
+                </div>
+
+                <hr class="my-3">
+
+                <button class="btn btn-primary w-100" type="submit">
+                  Create Meeting
+                </button>
+
+                <div class="text-muted small mt-2">
+                  After creation, attendees can open the meeting and proceed to face verification (if enabled).
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

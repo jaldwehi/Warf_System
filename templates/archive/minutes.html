@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Minutes | WARF{% endblock %}
+{% block hero_title %}Minutes & Decisions{% endblock %}
+{% block hero_subtitle %}Approved minutes and action records{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width:1050px;">
+  <div class="card p-4">
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th>Meeting</th>
+            <th>Created</th>
+            <th>Preview</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for m in minutes_list %}
+          <tr>
+            <td>{{ m.meeting.title }}</td>
+            <td>{{ m.created_at }}</td>
+            <td class="text-muted">
+              {{ m.summary|default:"-"|truncatechars:90 }}
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="3" class="text-muted">No minutes archived yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

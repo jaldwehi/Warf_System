@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Face Verification</title>
+</head>
+<body>
+  <h2>Face Verification</h2>
+  <p>Upload your face image to continue.</p>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="face_image" accept="image/*" required>
+    <button type="submit">Verify</button>
+  </form>
+
+  {% if result %}
+  <hr>
+  <p><b>Approved:</b> {{ result.approved }}</p>
+  <p><b>User:</b> {{ result.user }}</p>
+  <p><b>Confidence:</b> {{ result.confidence }}</p>
+
+  {% if result.approved %}
+    <p style="color:green;"><b>Face verified successfully ✅ Redirecting...</b></p>
+    <script>
+      setTimeout(function () {
+        window.location.href = "/redirect/";
+      }, 3000);
+    </script>
+  {% endif %}
+{% endif %}
+
+</body>
+</html>
+

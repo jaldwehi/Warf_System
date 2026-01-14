@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block hero_title %}WARF Assistant{% endblock %}
+{% block hero_subtitle %}Ask questions and retrieve knowledge from WARF records{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <div class="card warf-card p-4" style="border-radius:18px;">
+    <div id="chatBox" class="warf-chat-box"></div>
+
+    <form id="askForm" class="mt-3 d-flex gap-2">
+      {% csrf_token %}
+      <input id="q" name="question" class="form-control" placeholder="Ask WARF..." autocomplete="off">
+      <button class="btn btn-dark px-4">Send</button>
+    </form>
+  </div>
+
+  <div class="mt-3" id="sourcesBox"></div>
+</div>
+
+<script>
+const chatBox = document.getElementById("chatBox");
+const sourcesBox = document.getElementById("sourcesBox");
+const form = document.getElementById("askForm");
+const q = document.getElementById("q");
+
+function addBubble(role, text){
+  const wrap = document.createElement("div");
+  wrap.className = `warf-bubble-wrap ${role === "You" ? "me" : "bot"}`;
+
+  const b = document.createElement("div");
+  b.className = `warf-bubble ${role === "You" ? "me" : "bot"}`;
+  b.innerHTML = `<div class="warf-bubble-role">${role}</div>
+                 <div class="warf-bubble-text">${text.replaceAll("\n","<br>")}</div>`;
+  wrap.appendChild(b);
+
+  chatBox.appendChild(wrap);
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function renderSources(sources){
+  if(!sources || sources.length === 0){
+    sourcesBox.innerHTML = "";
+    return;
+  }
+  let html = `<div class="card warf-card p-3" style="border-radius:18px;">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h6 class="mb-0">Sources</h6>
+      <span class="text-muted" style="font-size:.9rem;">Top matches</span>
+    </div>`;
+
+  sources.forEach((s, i) => {
+    html += `
+      <div class="p-3 mb-2" style="border:1px solid #eef1f6; border-radius:14px;">
+        <div class="d-flex justify-content-between flex-wrap gap-2">
+          <div><b>${i+1})</b> ${s.title}</div>
+          <div class="text-muted">${s.doc_type} • meeting: ${s.meeting_id || "-"}</div>
+        </div>
+        <div class="mt-2 text-muted" style="white-space:pre-wrap">${s.snippet}</div>
+      </div>
+    `;
+  });
+
+  html += `</div>`;
+  sourcesBox.innerHTML = html;
+}
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const question = q.value.trim();
+  if(!question) return;
+
+  addBubble("You", question);
+  q.value = "";
+
+  const formData = new FormData(form);
+  formData.set("question", question);
+
+  const res = await fetch("{% url 'assistant:ask' %}", {
+    method: "POST",
+    body: formData
+  });
+
+  const data = await res.json();
+
+  if(!data.ok){
+    addBubble("WARF", data.error || "Error");
+    return;
+  }
+
+  addBubble("WARF", data.answer);
+  renderSources(data.sources);
+});
+</script>
+{% endblock %}
